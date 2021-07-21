@@ -35,6 +35,14 @@ export class GamesController {
     return this.gamesService.drawPropagation(+gameId, +cardId);
   }
 
+  @Post(":gameId/burn-propagation/:cardId")
+  burnPropagation(
+    @Param("gameId", new ParseIntPipe()) gameId: number,
+    @Param("cardId", new ParseIntPipe()) cardId: number,
+  ) {
+    return this.gamesService.burnPropagation(+gameId, +cardId);
+  }
+
   @Get("latest")
   findLatest() {
     return this.gamesService.findLatest();

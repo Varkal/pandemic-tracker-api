@@ -45,6 +45,16 @@ export class GamesService {
     return this.gameRepo.findOne(game.id);
   }
 
+  async burnPropagation(gameId: number, cardId: number) {
+    const game = await this.gameRepo.findOne(gameId);
+    const stack = game.stacks.find((stack) =>
+      stack.cards.find((card) => card.id === cardId),
+    );
+    stack.cards = stack.cards.filter((c) => c.id !== cardId);
+    await this.stackRepo.save(stack);
+    return this.gameRepo.findOne(gameId);
+  }
+
   async drawPropagation(gameId: number, cardId: number) {
     const game = await this.gameRepo.findOne(gameId);
     const discardStack = game.stacks[0];
