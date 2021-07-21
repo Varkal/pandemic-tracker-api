@@ -1,4 +1,5 @@
 import {
+  AfterLoad,
   Column,
   Entity,
   JoinTable,
@@ -25,4 +26,9 @@ export class GameStack {
 
   @ManyToOne(() => Game)
   game: Game;
+
+  @AfterLoad()
+  sortCards(): void {
+    this.cards.sort((a, b) => (a.name < b.name ? -1 : 1));
+  }
 }
