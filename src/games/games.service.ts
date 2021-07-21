@@ -48,8 +48,8 @@ export class GamesService {
   async drawPropagation(gameId: number, cardId: number) {
     const game = await this.gameRepo.findOne(gameId);
     const discardStack = game.stacks[0];
-    const drawStack = game.stacks.find(
-      (stack) => stack.order !== discardStack.order,
+    const drawStack = game.stacks.find((stack) =>
+      stack.cards.find((card) => card.id === cardId),
     );
 
     const card = drawStack.cards.find((card) => card.id === cardId);
