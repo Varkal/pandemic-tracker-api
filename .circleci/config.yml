@@ -28,15 +28,12 @@ jobs:
   publish:
     executor: gcp-gcr/default
     steps:
-      - attach_workspace:
-          at: "."
-      - gcp-gcr/build-image:
-          image: pandemic-tracker-api
-          registry-url: eu.gcr.io
-      - gcp-gcr/push-image:
+      - gcp-gcr/build-and-push-image:
+          attach-workspace: true
           digest-path: /tmp/digest.txt
           image: pandemic-tracker-api
           registry-url: eu.gcr.io
+          tag: latest
       - run:
           command: |
             echo "Digest is: $(</tmp/digest.txt)"
