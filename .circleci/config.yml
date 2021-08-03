@@ -30,7 +30,6 @@ jobs:
     steps:
       - attach_workspace:
           at: "."
-      - run: echo $GCP_SERVICE_ACCOUNT > $GOOGLE_APPLICATION_CREDENTIALS
       - gcp-gcr/build-image:
           image: pandemic-tracker-api
           registry-url: eu.gcr.io
