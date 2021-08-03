@@ -27,14 +27,16 @@ jobs:
       - run: npm test
   publish:
     executor: gcp-gcr/default
+    environment:
+      GOOGLE_PROJECT_ID: iroh-consulting
     steps:
       - gcp-gcr/build-image:
-          image: eu.gcr.io/pandemic-tracker-api
+          image: pandemic-tracker-api
           registry-url: eu.gcr.io
           tag: latest
       - gcp-gcr/push-image:
           digest-path: /tmp/digest.txt
-          image: eu.gcr.io/pandemic-tracker-api
+          image: pandemic-tracker-api
           registry-url: eu.gcr.io
           tag: latest
       - run:
