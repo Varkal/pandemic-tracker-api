@@ -29,12 +29,12 @@ jobs:
     executor: gcp-gcr/default
     steps:
       - gcp-gcr/build-image:
-          image: pandemic-tracker-api
+          image: eu.gcr.io/pandemic-tracker-api
           registry-url: eu.gcr.io
           tag: latest
       - gcp-gcr/push-image:
           digest-path: /tmp/digest.txt
-          image: pandemic-tracker-api
+          image: eu.gcr.io/pandemic-tracker-api
           registry-url: eu.gcr.io
           tag: latest
       - run:
