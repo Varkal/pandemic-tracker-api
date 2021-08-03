@@ -1,5 +1,8 @@
 version: 2.1
 
+orbs:
+  gcp-gcr: circleci/gcp-gcr@0.13.0
+
 executors:
   node:
     docker:
@@ -23,20 +26,21 @@ jobs:
           at: "."
       - run: npm test
   publish:
-    docker:
-      - image: gcr.io/kaniko-project/executor:debug
-    environment:
-      GOOGLE_APPLICATION_CREDENTIALS: ./serviceAccount.json
+    executor: gcp-gcr/default
     steps:
       - attach_workspace:
           at: "."
       - run: echo $GCP_SERVICE_ACCOUNT > $GOOGLE_APPLICATION_CREDENTIALS
-      - run: >
-          /kaniko/executor
-          --context $CI_PROJECT_DIR
-          --dockerfile ./Dockerfile
-          --destination eu.gcr.io/iroh-consulting/pandemic-tracker-api:latest
-          --digest-file ./image-digest
+      - gcp-gcr/build-image:
+          image: pandemic-tracker-api
+          registry-url: eu.gcr.io
+      - gcp-gcr/push-image:
+          digest-path: /tmp/digest.txt
+          image: pandemic-tracker-api
+          registry-url: eu.gcr.io
+      - run:
+          command: |
+            echo "Digest is: $(</tmp/digest.txt)"
 workflows:
   version: 2
   main:
