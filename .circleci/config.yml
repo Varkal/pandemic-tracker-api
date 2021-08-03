@@ -30,6 +30,7 @@ jobs:
     environment:
       GOOGLE_PROJECT_ID: iroh-consulting
     steps:
+      - gcp-gcr/gcr-auth
       - gcp-gcr/build-image:
           attach-workspace: true
           image: pandemic-tracker-api
