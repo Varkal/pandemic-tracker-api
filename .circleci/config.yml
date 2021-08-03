@@ -1,0 +1,52 @@
+version: 2.1
+
+executors:
+  node:
+    docker:
+      - image: node:14
+
+jobs:
+  build:
+    executor: node
+    steps:
+      - checkout
+      - run: npm install
+      - run: npm run build
+      - persist_to_workspace:
+          root: workspace
+          paths:
+            - dist
+            - node_modules
+  test:
+    executor: node
+    steps:
+      - attach_workspace:
+          at: "."
+      - run: npm test
+  publish:
+    docker:
+      - image: gcr.io/kaniko-project/executor:debug
+    steps:
+      - attach_workspace:
+          at: "."
+      - run: >
+          GOOGLE_APPLICATION_CREDENTIALS=$GCP_IMAGE_PUBLISHER_SA /kaniko/executor
+          --context $CI_PROJECT_DIR
+          --dockerfile ./Dockerfile
+          --destination eu.gcr.io/iroh-consulting/pandemic-tracker-api:latest
+          --digest-file ./image-digest
+
+workflows:
+  version: 2
+  main:
+    jobs:
+      - build
+      - test:
+          requires:
+            - build
+      - publish:
+          filters:
+            branches:
+              only: [master]
+          requires:
+            - test
