@@ -25,16 +25,18 @@ jobs:
   publish:
     docker:
       - image: gcr.io/kaniko-project/executor:debug
+    environment:
+      GOOGLE_APPLICATION_CREDENTIALS: ./serviceAccount.json
     steps:
       - attach_workspace:
           at: "."
+      - run: echo $GCP_SERVICE_ACCOUNT > $GOOGLE_APPLICATION_CREDENTIALS
       - run: >
-          GOOGLE_APPLICATION_CREDENTIALS=$GCP_IMAGE_PUBLISHER_SA /kaniko/executor
+          /kaniko/executor
           --context $CI_PROJECT_DIR
           --dockerfile ./Dockerfile
           --destination eu.gcr.io/iroh-consulting/pandemic-tracker-api:latest
           --digest-file ./image-digest
-
 workflows:
   version: 2
   main:
@@ -46,6 +48,6 @@ workflows:
       - publish:
           filters:
             branches:
-              only: [master]
+              only: [main]
           requires:
             - test
