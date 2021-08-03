@@ -29,6 +29,7 @@ jobs:
     executor: gcp-gcr/default
     environment:
       GOOGLE_PROJECT_ID: iroh-consulting
+      GOOGLE_COMPUTE_REGION: europe-west1
     steps:
       - gcp-gcr/gcr-auth
       - gcp-gcr/build-image:
