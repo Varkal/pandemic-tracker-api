@@ -28,9 +28,13 @@ jobs:
   publish:
     executor: gcp-gcr/default
     steps:
-      - gcp-gcr/build-and-push-image:
+      - gcp-gcr/build-image:
           attach-workspace: true
           digest-path: /tmp/digest.txt
+          image: pandemic-tracker-api
+          registry-url: eu.gcr.io
+          tag: latest
+      - gcp-gcr/push-image:
           image: pandemic-tracker-api
           registry-url: eu.gcr.io
           tag: latest
