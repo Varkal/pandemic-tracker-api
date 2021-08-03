@@ -31,17 +31,22 @@ jobs:
       GOOGLE_PROJECT_ID: iroh-consulting
     steps:
       - gcp-gcr/build-image:
+          attach-workspace: true
           image: pandemic-tracker-api
           registry-url: eu.gcr.io
           tag: latest
       - gcp-gcr/push-image:
-          digest-path: /tmp/digest.txt
+          digest-path: digest.txt
           image: pandemic-tracker-api
           registry-url: eu.gcr.io
           tag: latest
       - run:
           command: |
-            echo "Digest is: $(</tmp/digest.txt)"
+            echo "Digest is: $(<digest.txt)"
+      - persist_to_workspace:
+          root: .
+          paths:
+            - .
 workflows:
   version: 2
   main:
