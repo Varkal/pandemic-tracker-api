@@ -68,7 +68,7 @@ jobs:
           --url "git@github.com:Varkal/pandemic-tracker-infra.git"
           --name pandemic-tracker-infra
           --key .backVersion
-          --value "$(cat image-digest)"
+          --value "$(cat digest.txt)"
           --file values_dev.yaml
           --user "$CIRCLE_USERNAME"
           --email "$(git log --format='%ae' HEAD^!)"
