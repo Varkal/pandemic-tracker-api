@@ -7,6 +7,10 @@ executors:
   node:
     docker:
       - image: node:14
+  yaml:
+    docker:
+      - image: varkal/yaml-commiter:latest
+        entrypoint: ["sh"]
 
 jobs:
   build:
@@ -55,6 +59,19 @@ jobs:
           root: .
           paths:
             - .
+  deploy:
+    executor: yaml
+    steps:
+      - add_ssh_keys
+      - run: >
+          yaml-commit
+          --url "git@github.com:Varkal/pandemic-tracker-infra.git"
+          --name pandemic-tracker-infra
+          --key .backVersion
+          --value "$(cat image-digest)"
+          --file values_dev.yaml
+          --user "$CIRCLE_USERNAME"
+          --email "$(git log --format='%ae' HEAD^!)"
 workflows:
   version: 2
   main:
@@ -69,3 +86,9 @@ workflows:
               only: [main]
           requires:
             - test
+      - deploy:
+          filters:
+            branches:
+              only: [main]
+          requires:
+            - publish
