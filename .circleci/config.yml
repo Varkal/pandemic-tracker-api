@@ -67,7 +67,7 @@ jobs:
       - add_ssh_keys
       - run: >
           yaml-commit
-          --url "git@github.com:Varkal/pandemic-tracker-infra.git"
+          --url "https://Varkal:${GITHUB_TOKEN}@github.com/Varkal/pandemic-tracker-infra.git"
           --name pandemic-tracker-infra
           --key .backVersion
           --value "$(cat digest.txt)"
