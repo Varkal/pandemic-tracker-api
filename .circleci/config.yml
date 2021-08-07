@@ -65,7 +65,7 @@ jobs:
           yaml-commit
           --url "https://Varkal:${GITHUB_TOKEN}@github.com/Varkal/pandemic-tracker-infra.git"
           --name pandemic-tracker-infra
-          --key .backVersion
+          --key .backImage
           --value "$(cat digest.txt)"
           --file values_dev.yaml
           --user "$CIRCLE_USERNAME"
