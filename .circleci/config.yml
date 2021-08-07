@@ -37,9 +37,6 @@ jobs:
       - run: npm test
   publish:
     executor: gcp-gcr/default
-    environment:
-      GOOGLE_PROJECT_ID: iroh-consulting
-      GOOGLE_COMPUTE_REGION: europe-west1
     steps:
       - gcp-gcr/gcr-auth
       - gcp-gcr/build-image:
@@ -64,7 +61,6 @@ jobs:
     steps:
       - attach_workspace:
           at: "."
-      - add_ssh_keys
       - run: >
           yaml-commit
           --url "https://Varkal:${GITHUB_TOKEN}@github.com/Varkal/pandemic-tracker-infra.git"
@@ -78,17 +74,21 @@ workflows:
   version: 2
   main:
     jobs:
-      - build
+      - build:
+          context: default
       - test:
+          context: default
           requires:
             - build
       - publish:
+          context: default
           filters:
             branches:
               only: [main]
           requires:
             - test
       - deploy:
+          context: default
           filters:
             branches:
               only: [main]
